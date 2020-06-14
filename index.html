@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Capture image from a video / Capturar imagem de um vídeo</title>
+	<link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAFMgAABTIBGlQJPwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEeSURBVDiNpZMxK8VhFMZ/v/MSUZRCysJAbDIos8XE5EOwWcRik8/BxGZRslmVTAySklIy2e89Bv9yue5146nTe+q8z9PzdDpmJv+BwKK4A47/SUDiBpgB6sANUOuQOwaMIJESr8BEZtJpBbEvkVHlOM7Mh6/WHA7jPIxzdbiVjajet+ZRWQWXPqqsthLoah2xdgZx99m3d9CEzHxM6tNJfRrKQrEcqT2/CqiTqpVIArOSBwlrEOttBbRsSdxLuVSn1G6JQ6AXQNhS+34UUPuF7SrAvMSVeALMNfwfhdho4aCsAIMNs35wuSkibFbtAHzZQu00id2Aoe+kRtTxQp2QWPtwTiTwAjy3IzagALOV+1slrjskfkM+Jbnnf8/5HeZWZCvPWRq8AAAAAElFTkSuQmCC" />
+	<style>
+		body * {
+			margin: 20px;
+			vertical-align: middle;
+		}
+		video {
+			max-width: 40%;
+		}
+	</style>
+</head>
+<body>
+	<h1>Capture image from a video / Capturar imagem de um vídeo</h1>
+	<p>Select a video below and place it at the moment you want to capture the image.</p>
+	<p>Selecione um vídeo abaixo e coloque-o no momento em que deseja capturar a imagem.</p>
+
+	<input type="file" />
+	<br />
+	<video controls muted></video>
+	<button onclick="getFrame()">Download Current Image / Baixar Imagem Atual</button>
+
+	<script type="text/javascript">
+		document.querySelector('input').addEventListener('change', selectVideo, false);
+		const video = document.querySelector('video');
+
+		function getFrame() {
+			const canvas = document.createElement('canvas');
+			const ctx = canvas.getContext('2d');
+			canvas.width = video.videoWidth;
+			canvas.height = video.videoHeight;
+			ctx.drawImage(video, 0, 0);
+
+			// Download Image
+			canvas.toBlob((blob) => {
+				const a = document.createElement('a');
+				a.href = URL.createObjectURL(blob);
+				a.download = 'video-image';
+				a.click();
+				URL.revokeObjectURL(blob);
+			}, 'image/jpeg');
+		}
+
+		function selectVideo() {
+			video.src = URL.createObjectURL(this.files[0]);
+			URL.revokeObjectURL(this.files[0]);
+		}
+	</script>
+</body>
+</html>
